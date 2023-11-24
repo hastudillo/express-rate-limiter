@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  express_rate_limiter_0:
+    container_name: express_rate_limiter_0
+    build:
+      context: .
+      args:
+        PORT: 3000
+    expose:
+      - "3000"
+    ports:
+      - 3000:3000
+    environment:
+      AUTH_TOKEN: am9obkBleGFtcGxlLmNvbTphYmMxMjM=
+      REDIS_URL: "redis://redis:6379"
+      RATE_LIMIT_BY_TOKEN: 200
+      RATE_LIMIT_BY_IP: 100
+      WINDOW_SIZE_IN_SECONDS: 3600
+    depends_on:
+      - redis
+
+  express_rate_limiter_1:
+    container_name: express_rate_limiter_1
+    build:
+      context: .
+      args:
+        PORT: 3001
+    expose:
+      - "3001"
+    ports:
+      - 3001:3001
+    environment:
+      AUTH_TOKEN: am9obkBleGFtcGxlLmNvbTphYmMxMjM=
+      REDIS_URL: "redis://redis:6379"
+      RATE_LIMIT_BY_TOKEN: 200
+      RATE_LIMIT_BY_IP: 100
+      WINDOW_SIZE_IN_SECONDS: 3600
+    depends_on:
+      - redis
